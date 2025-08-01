@@ -2,7 +2,7 @@
 # This module provides a base class for making HTTP requests using the requests library.
 # It includes methods for GET, POST, PUT, and DELETE requests.
 # It is designed to be extended by other classes that require HTTP client functionality.
-# Author: Vendel,
+# Author: Vendel, GITHUB: jv813yh
 # Date: 08/01/2025
 
 import requests

@@ -1,6 +1,10 @@
+# hugging_face_api.py
+# This module provides a class for interacting with the Hugging Face API to fetch completions.
+# Author: Vendel, GITHUB: jv813yh
+# Date: 08/01/2025
+
 from openai import OpenAI
 
-repo_id = 'meta-llama/Llama-3.1-8B-Instruct:novita'
 HF_TOKEN = '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'
 
 SYS_PROMPT = """
@@ -22,8 +26,7 @@ Instructions:
 """
 
 class HugginFaceProvider:
-    def __init__(self, repo_id, HF_TOKEN):
-        self.repo_id = repo_id
+    def __init__(self):
         self.HF_TOKEN = HF_TOKEN    
         self.client = OpenAI(
             base_url="https://router.huggingface.co/v1",
@@ -31,9 +34,15 @@ class HugginFaceProvider:
             api_key=HF_TOKEN,
         )
 
-    def get_completion(self, prompt):
+    def get_completion(self, 
+                       repo_id, 
+                       prompt):
         """
         Get a completion from the Hugging Face API using the specified llm model.
+
+        Args:
+            repo_id (str): The repository ID of the model to use.
+            prompt (str): The prompt to send to the model.
         """
         try:
             completion = self.client.chat.completions.create(
@@ -60,7 +69,6 @@ class HugginFaceProvider:
 
 if __name__ == "__main__":
 
-    llm_model = HugginFaceProvider(repo_id, HF_TOKEN)
     text = (
         "Daily time series data for Tesla Inc (TSLA):\n"
         "2025-07-30: {'1. open': '322.1800', '2. high': '324.4499', '3. low': '311.6164', "
@@ -69,5 +77,3 @@ if __name__ == "__main__":
         "'4. close': '321.2000', '5. volume': '87358861'}"
     )
 
-    print(    llm_model = HugginFaceProvider(repo_id, HF_TOKEN)
-.get_completion(text))

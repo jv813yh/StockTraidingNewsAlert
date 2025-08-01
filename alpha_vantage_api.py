@@ -4,13 +4,13 @@
 # Author: Vendel, GITHUB: jv813yh
 # Date: 08/01/2025
 
-import requests
-import json
+from http_client import HTTP_CLIENT_PROVIDER
 
+API_KEY = 'F74BHY6LTAQHJ61K'
 
 class AlphaVantageProvider:    
-    def __init__(self, api_key):
-        self.api_key = api_key
+    def __init__(self):
+        self.api_key = API_KEY
         self.base_url = "https://www.alphavantage.co/query"
 
     def veryfy_api_key(self):
@@ -46,19 +46,13 @@ class AlphaVantageProvider:
             }
 
             # Make the API request
-            response = requests.get(self.base_url, params=stock_params)
-            response.raise_for_status()  # Raise an error for bad responses
-            data = response.json()
+            data_json = HTTP_CLIENT_PROVIDER.get(self.base_url, params=stock_params)
             
-            if "Time Series (Daily)" in data:
-                return data["Time Series (Daily)"]
+            if "Time Series (Daily)" in data_json:
+                return data_json["Time Series (Daily)"]
             
             else:
-                return data
-            
-        except requests.RequestException as e:
-            raise ConnectionError("Failed to connect to Alpha Vantage API: " + str(e))
-        except json.JSONDecodeError:
-            raise ValueError("Error decoding JSON response from Alpha Vantage API")
+                return data_json
         except Exception as e:
-            raise Exception("An unexpected error occurred: " + str(e))
+            raise ConnectionError(f"Failed to fetch data for {symbol}: {e}")
+            

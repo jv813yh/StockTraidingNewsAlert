@@ -11,7 +11,7 @@ COMPANY_NAME = "Tesla Inc"
 if __name__ == "__main__":
     # Initialize the AlphaVantageProvider with your API key 
     api_key = 'F74BHY6LTAQHJ61K'
-    provider = AlphaVantageProvider(api_key)
+    provider = AlphaVantageProvider()
 
     try:
         # Fetch daily time series data for the specified stock symbol
