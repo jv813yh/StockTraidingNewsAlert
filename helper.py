@@ -1,4 +1,8 @@
-
+# helper.py
+# This module provides helper functions for summarizing daily stock data.
+# It includes a method to summarize the daily time series data for a given stock symbol.
+# Author: Vendel, GITHUB: jv813yh
+# Date: 08/01/2025
 
 
 

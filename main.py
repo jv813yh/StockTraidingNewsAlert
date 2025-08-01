@@ -1,4 +1,8 @@
-from alphavantage_provider import AlphaVantageProvider
+# main.py
+# This script serves as the entry point for fetching 
+# Author: Vendel, GITHUB: jv813yh
+# Date: 08/01/2025
+from alpha_vantage_api import AlphaVantageProvider
 
 
 STOCK = "TSLA"
