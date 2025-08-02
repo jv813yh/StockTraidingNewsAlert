@@ -14,14 +14,6 @@ class NewsAPIProvider:
         self.api_key = API_KEY
         self.base_url = "https://newsapi.org/v2/everything"
 
-    def verify_api_key(self):
-        """
-        Verifies if the provided API key is valid by making a test request.
-        Raises ValueError if the API key is empty.
-        """
-        if not self.api_key:
-            raise ValueError("API key must not be empty")
-
     def get_news_articles(self, query, from_date=None, to_date=None):
         """
         Fetches news articles based on a query and optional date range.
@@ -34,7 +26,6 @@ class NewsAPIProvider:
             list: A list of news articles matching the query and date range.
         """
         try:
-            self.verify_api_key()
             
             params = {
                 'q': query,

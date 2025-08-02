@@ -5,39 +5,23 @@
 # Date: 08/01/2025
 
 from http_client import HTTP_CLIENT_PROVIDER
+import datetime
 
 API_KEY = 'F74BHY6LTAQHJ61K'
+SATURDAY = 5
+SUNDAY = 6
 
 class AlphaVantageProvider:    
     def __init__(self):
         self.api_key = API_KEY
         self.base_url = "https://www.alphavantage.co/query"
 
-    def veryfy_api_key(self):
-        """
-        Verifies if the provided API key is valid by making a test request.
-        Raises ValueError if the API key is empty."""
-        if not self.api_key:
-            raise ValueError("API key must not be empty")
-        
-    def verify_symbol(self, symbol):
-        """
-        Verifies if the provided stock symbol is valid by making a test request.
-        Raises ValueError if the symbol is empty or invalid.
-        """
-        if not symbol:
-            raise ValueError("Stock symbol must not be empty")
-        
-
-
     def get_time_series_daily_data(self, symbol:str):
         """
         Fetches daily time series data for a given stock symbol from Alpha Vantage.
         """
         try:
-            # Verify stock symbol
-            self.verify_symbol(symbol)
-        
+
             # Prepare parameters for the API request
             stock_params = {
                 "function": "TIME_SERIES_DAILY",
@@ -55,4 +39,14 @@ class AlphaVantageProvider:
                 return data_json
         except Exception as e:
             raise ConnectionError(f"Failed to fetch data for {symbol}: {e}")
-            
+
+
+if __name__ == "__main__":
+    # Example usage of the AlphaVantageProvider
+    alpha_vantage_provider = AlphaVantageProvider()
+    
+    try:
+        daily_data = alpha_vantage_provider.get_time_series_daily_data("AAPL")
+        print("Daily data for AAPL:", daily_data)
+    except Exception as e:
+        print(f"Error fetching data: {e}")

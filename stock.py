@@ -13,7 +13,8 @@ class Stock:
         company_name (str): The name of the company.
     """
 
-    def __init__(self, symbol, company_name):
+    def __init__(self, symbol, 
+                 company_name):
         """
         Initializes a Stock instance with the given symbol and company name.
         
