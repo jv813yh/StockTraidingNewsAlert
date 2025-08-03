@@ -14,6 +14,30 @@ class NewsAPIProvider:
         self.api_key = API_KEY
         self.base_url = "https://newsapi.org/v2/everything"
 
+    def create_correct_format_articles(self, articles:dict):
+        """
+        Converts the articles to a correct format for further processing.
+        
+        Args:
+            articles (dict): dict of articles to be formatted.
+        
+        Returns:
+            string: formatted data of articles.
+        """
+        if "articles" not in articles:
+            raise ValueError("No articles found in the response.")
+        if len(articles["articles"]) == 0:
+            raise ValueError("No articles found for the given query.")
+        formatted_articles = ""
+        counter = 0
+        for article in articles["articles"]:
+            formatted_articles += f"Title: {article['title']}\nContent: {article['content']}\nPublished At: {article['publishedAt']}\n"
+            counter += 1
+            if counter == 3:  # Limit to 3 articles
+                break
+        
+        return formatted_articles
+
     def get_news_articles(self, query, from_date=None, to_date=None):
         """
         Fetches news articles based on a query and optional date range.
@@ -40,7 +64,9 @@ class NewsAPIProvider:
             data_json = HTTP_CLIENT_PROVIDER.get(self.base_url, params=params)
 
             if 'articles' in data_json:
-                return data_json['articles']
+                # Format the articles for further processing
+                formatted_articles =self.create_correct_format_articles(data_json)
+                return formatted_articles
             
             return data_json
         except Exception as e:

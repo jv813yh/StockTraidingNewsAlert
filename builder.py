@@ -32,8 +32,8 @@ class Builder:
             Returns a summary of the daily data.
         """
         try:
-            daily_data_summaries = "Stock:\n"
-
+            daily_data_summaries = ""
+            final_completion = ""
             stocks_list = self.load_stocks_from_json(INPUT_FILE)
             dates = []
 
@@ -58,10 +58,12 @@ class Builder:
 
                 # Get articles related to the stock symbol from the News API according to the dates
                 news_articles = self.news_api_provider.get_news_articles(stock.symbol, from_date=dates[0], to_date=dates[1])
-                daily_data_summaries += "/n"+ str(news_articles[:3]) +"/n----------------------------\nStock:\n"
+                daily_data_summaries += "/n"+ news_articles
+                # Get completion from the Hugging Face API
+                stock_completion = self.hugging_face_provider.get_completion(repo_id=REPO_ID, prompt=daily_data_summaries)
+                final_completion += f"\n{stock_completion}\n"
+                dates.clear()  # Clear dates for the next stock
 
-            # Get completion from the Hugging Face API
-            final_completion = self.hugging_face_provider.get_completion(repo_id=REPO_ID, prompt=daily_data_summaries)
             return final_completion
         except Exception as e:
             raise Exception(f"An error occurred while summarizing the stock data: {e}")

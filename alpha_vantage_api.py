@@ -5,12 +5,8 @@
 # Date: 08/01/2025
 
 from http_client import HTTP_CLIENT_PROVIDER
-import datetime
 
 API_KEY = 'F74BHY6LTAQHJ61K'
-SATURDAY = 5
-SUNDAY = 6
-
 class AlphaVantageProvider:    
     def __init__(self):
         self.api_key = API_KEY
