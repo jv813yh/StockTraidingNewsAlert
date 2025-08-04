@@ -25,7 +25,7 @@ class Builder:
         self.hugging_face_provider = HugginFaceProvider()
         self.news_api_provider = NewsAPIProvider()
 
-    def sumarize_stock_data(self):
+    def sumarize_stocks_data(self):
         """Summarizes the daily time series data for a given stocks symbol from the input file.
 
         Returns:
@@ -135,5 +135,5 @@ if __name__ == "__main__":
     # Example usage of the Builder class
     builder = Builder()
     
-    daily_data_summaries = builder.sumarize_stock_data()
+    daily_data_summaries = builder.sumarize_stocks_data()
     print("Content of the file:", daily_data_summaries)

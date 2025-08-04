@@ -8,7 +8,7 @@ if __name__ == "__main__":
 
     builder_app = Builder()
     try:
-        summary = builder_app.sumarize_stock_data()
+        summary = builder_app.sumarize_stocks_data()
         print("Summary of daily data:")
         print(summary)
     except Exception as e:
