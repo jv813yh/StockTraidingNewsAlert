@@ -38,7 +38,7 @@ class NewsAPIProvider:
         
         return formatted_articles
 
-    def get_news_articles(self, query, from_date=None, to_date=None):
+    def get_news_articles(self, query, company_name, from_date=None, to_date=None):
         """
         Fetches news articles based on a query and optional date range.
 
@@ -52,11 +52,12 @@ class NewsAPIProvider:
         try:
             
             params = {
-                'q': query,
+                #'q': query,
                 'from': from_date,
                 'to': to_date,
                 'sortBy': 'popularity',
                 'language': 'en',
+                'qInTitle': company_name,
                 'apiKey': self.api_key
             }
             
@@ -78,10 +79,8 @@ if __name__ == "__main__":
     news_provider = NewsAPIProvider()
     
     try:
-        articles = news_provider.get_news_articles(query="Tesla", from_date="2025-07-30", to_date="2025-07-31")
+        articles = news_provider.get_news_articles(query="Tesla", company_name="", from_date="2025-07-30", to_date="2025-07-31")
         print("Fetched news articles:")
-        for article in articles:
-            print(f"- {article['title']} ({article['publishedAt']})")
 
 
     except Exception as e:

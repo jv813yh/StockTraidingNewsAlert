@@ -46,7 +46,7 @@ if __name__ == "__main__":
     twilio_provider = TwilioProvider()
     try:
         message = twilio_provider.sends_message_sms(
-            to='+421944908606',  # Replace with the recipient's phone number
+            to='+....',  # Replace with the recipient's phone number
             body='Hello from Twilio!'
         )
         print(f"Message sent successfully: {message.sid}")

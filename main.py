@@ -11,5 +11,11 @@ if __name__ == "__main__":
         summary = builder_app.sumarize_stocks_data()
         print("Summary of daily data:")
         print(summary)
+        message = builder_app.send_sms_notification(summary)
+        if message:
+            print("SMS notification sent successfully.")
+            print(f"Message SID: {message.sid}")
+        else:
+            print("Failed to send SMS notification.")
     except Exception as e:
         print(f"An error occurred: {e}")

@@ -12,10 +12,12 @@ from stock import Stock
 from alpha_vantage_api import AlphaVantageProvider
 from hugging_face_api import HugginFaceProvider
 from news_api import NewsAPIProvider
+from twilio_provider import TwilioProvider
 
 # Constants
 REPO_ID = 'meta-llama/Llama-3.1-8B-Instruct:novita'
 INPUT_FILE = 'stocks.json'
+PHONE_NUMBER = '+421944908606'
 SATURDAY = 5
 SUNDAY = 6
 
@@ -24,6 +26,7 @@ class Builder:
         self.alpha_vantage_provider = AlphaVantageProvider()
         self.hugging_face_provider = HugginFaceProvider()
         self.news_api_provider = NewsAPIProvider()
+        self.twilio_provider = TwilioProvider()
 
     def sumarize_stocks_data(self):
         """Summarizes the daily time series data for a given stocks symbol from the input file.
@@ -57,7 +60,7 @@ class Builder:
                         break
 
                 # Get articles related to the stock symbol from the News API according to the dates
-                news_articles = self.news_api_provider.get_news_articles(stock.symbol, from_date=dates[0], to_date=dates[1])
+                news_articles = self.news_api_provider.get_news_articles(query=stock.symbol, company_name=stock.company_name, from_date=dates[0], to_date=dates[1])
                 daily_data_summaries += "/n"+ news_articles
                 # Get completion from the Hugging Face API
                 stock_completion = self.hugging_face_provider.get_completion(repo_id=REPO_ID, prompt=daily_data_summaries)
@@ -68,6 +71,22 @@ class Builder:
         except Exception as e:
             raise Exception(f"An error occurred while summarizing the stock data: {e}")
 
+    def send_sms_notification(self, body, to=PHONE_NUMBER):
+        """
+        Sends an SMS notification using the Twilio provider.
+        
+        Args:
+            to (str): The recipient's phone number.
+            body (str): The content of the SMS message.
+        
+        Returns:
+            Message: The sent message object.
+        """
+        try:
+            return self.twilio_provider.sends_message_sms(to, body)
+        except Exception as e:
+            raise Exception(f"An error occurred while sending SMS notification: {e}")
+        
     def create_dates(self):
         """
         Creates a date string for the current date and the day before.

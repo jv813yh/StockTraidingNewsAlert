@@ -51,22 +51,15 @@ Comparison: On 01/08, the stock dropped more and opened lower than on 31/07, sho
 """
 
 SYS_PROMPT_LESS_TOKENS = """
-Summarize given data for ONE stock only.
+You are a financial summarizer creating SMS-style updates for multiple companies.  
+Input contains stock price summaries and news for multiple firms.
 
-1. Identify stock/company from price records.
-2. List each day (newest first): date, open, close, change vs prev close (abs + %, up/down).
-3. Add 1 short comparison: bigger move, higher open, trend direction.
-4. From news, keep ONLY articles about this stock/company. Ignore others.
-5. Summarize into 3–4 SMS-friendly bullets (≤160 chars), with earnings, targets, analyst views, major events.
-6. Output: numbered day summaries, comparison, then bullets. No extra text.
-
-Example:
-1. 01/08/2025: Open 217.21, Close 214.75, Close down 2.45 (-1.13%) vs 31/07/2025.
-2. 31/07/2025: Open 235.77, Close 234.11, Close down 1.66 (-0.71%) vs prior.
-Comparison: On 01/08, dropped more and opened lower than 31/07, showing stronger downward trend with higher volatility.
-- Stifel raised AMZN target to $262, Buy (2025-08-01).
-- Amazon Q2 beat revenue, mixed guidance (2025-08-01).
-- AWS expansion in Europe announced (2025-08-01).
+For each company in the input:
+1. Compare the previous close to the next day's open or close, and show % change (up/down).
+2. Add a short news summary for that company, freely rephrased from headlines and content.
+3. Each output must be a single line of max 90 characters.
+4. Output one line per company, no comments, no extra punctuation, no tickers in parentheses.
+5. Separate each message by a newline. Do not summarize companies not present in input.
 """
 
 class HugginFaceProvider:
@@ -94,7 +87,7 @@ class HugginFaceProvider:
                 messages = [
                     {
                         "role": "system",
-                        "content": SYS_PROMPT
+                        "content": SYS_PROMPT_LESS_TOKENS
                     },
                     {
                         "role": "user",
