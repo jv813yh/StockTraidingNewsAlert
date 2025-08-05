@@ -4,10 +4,22 @@
 # Date: 08/04/2025
 
 from twilio.rest import Client
+from dotenv import load_dotenv, find_dotenv
+import os
 
-TWILIO_ACCOUNT_SID = 'ACd160abc725609dd28fcf523c76367145'
-TWILIO_AUTH_TOKEN = '09cce2532a964e8a8cfe31fde3e6c985'
-TWILIO_VIRTUAL_NUMBER = '+18567582142'
+dotenv_path = find_dotenv()
+if dotenv_path:
+    load_dotenv(dotenv_path)
+# Fetching Twilio credentials from environment variables
+TWILIO_ACCOUNT_SID =    os.getenv("TWILIO_ACCOUNT_SID")
+if not TWILIO_ACCOUNT_SID:
+    raise ValueError("TWILIO_ACCOUNT_SID not found in environment variables.")
+TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN")
+if not TWILIO_AUTH_TOKEN:
+    raise ValueError("TWILIO_AUTH_TOKEN not found in environment variables.")
+TWILIO_VIRTUAL_NUMBER = os.getenv("TWILIO_VIRTUAL_NUMBER")
+if not TWILIO_VIRTUAL_NUMBER:
+    raise ValueError("TWILIO_VIRTUAL_NUMBER not found in environment variables.")
 
 class TwilioProvider:
     def __init__(self):

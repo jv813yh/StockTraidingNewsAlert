@@ -4,8 +4,16 @@
 # Date: 08/01/2025
 
 from openai import OpenAI
+from dotenv import load_dotenv, find_dotenv
+import os
 
-HF_TOKEN = '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'
+dotenv_path = find_dotenv()
+if dotenv_path:
+    load_dotenv(dotenv_path)
+# Fetching Hugging Face token from environment variables
+HF_TOKEN = os.getenv("HF_TOKEN")
+if not HF_TOKEN:
+    raise ValueError("HF_TOKEN not found in environment variables.")
 
 SYS_PROMPT = """
 You are a concise financial summary assistant. 

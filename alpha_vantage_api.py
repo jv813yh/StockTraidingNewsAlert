@@ -5,8 +5,15 @@
 # Date: 08/01/2025
 
 from http_client import HTTP_CLIENT_PROVIDER
+from dotenv import load_dotenv, find_dotenv
+import os
 
-API_KEY = 'F74BHY6LTAQHJ61K'
+dotenv_path = find_dotenv()
+if dotenv_path:
+    load_dotenv(dotenv_path)
+API_KEY = os.getenv("ALPHA_VANTAGE_API_KEY")
+if not API_KEY:
+    raise ValueError("ALPHA_VANTAGE_API_KEY not found in environment variables.")
 class AlphaVantageProvider:    
     def __init__(self):
         self.api_key = API_KEY

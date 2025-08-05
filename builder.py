@@ -7,6 +7,8 @@
 import json
 import datetime
 from stock import Stock
+from dotenv import load_dotenv, find_dotenv
+import os
 
 
 from alpha_vantage_api import AlphaVantageProvider
@@ -17,9 +19,16 @@ from twilio_provider import TwilioProvider
 # Constants
 REPO_ID = 'meta-llama/Llama-3.1-8B-Instruct:novita'
 INPUT_FILE = 'stocks.json'
-PHONE_NUMBER = '+421944908606'
 SATURDAY = 5
 SUNDAY = 6
+
+load_path = find_dotenv()
+if load_path:
+    load_dotenv(load_path)
+# Fetching Twilio phone number from environment variables
+PHONE_NUMBER = os.getenv("PHONE_NUMBER")
+if not PHONE_NUMBER:
+    raise ValueError("PHONE_NUMBER not found in environment variables.")
 
 class Builder:
     def __init__(self):

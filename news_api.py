@@ -4,9 +4,17 @@
 # Date: 08/01/2025
 
 from http_client import HTTP_CLIENT_PROVIDER
+from dotenv import load_dotenv, find_dotenv
+import os
 
 
-API_KEY = 'f2b615d110e6454dacb9e17a1d3163d7'
+dotenv_path = find_dotenv()
+if dotenv_path:
+    load_dotenv(dotenv_path)
+# Fetching News API key from environment variables
+API_KEY = os.getenv("NEWS_API_KEY")
+if not API_KEY:
+    raise ValueError("NEWS_API_KEY not found in environment variables.")
 
 
 class NewsAPIProvider:
