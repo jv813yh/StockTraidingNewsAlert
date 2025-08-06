@@ -74,6 +74,7 @@ class Builder:
                 # Get completion from the Hugging Face API
                 stock_completion = self.hugging_face_provider.get_completion(repo_id=REPO_ID, prompt=daily_data_summaries)
                 final_completion += f"\n{stock_completion}\n"
+                daily_data_summaries = ""  # Reset daily data summaries for the next stock
                 dates.clear()  # Clear dates for the next stock
 
             return final_completion
