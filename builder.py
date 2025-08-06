@@ -60,6 +60,15 @@ class Builder:
                 # Create a summary of the daily data
                 daily_data_summaries += f"Summary for {stock.symbol} ({stock.company_name}):\n"
                 for date, data in daily_data.items():
+
+                    if not isinstance(data, dict):
+                        print(f"Unexpected API response for {stock.symbol}: {data}")
+                        break
+
+                    if '1. open' not in data or '4. close' not in data:
+                        print(f"Missing expected keys in data for {stock.symbol} on {date}: {data}")
+                        break
+                        
                     daily_data_summaries += f"Date: {date}, Open: {data['1. open']}, Close: {data['4. close']}\n"
                     dates.append(date)  
                     counter_days += 1
