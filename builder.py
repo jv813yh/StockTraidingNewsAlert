@@ -100,7 +100,13 @@ class Builder:
         """
         
         """
-        with open(file_path, 'r') as f:
+        dir_name = os.path.dirname(file_path)
+        final_file_path = os.path.join(dir_name, file_path)
+
+        if not os.path.exists(final_file_path):
+            raise FileNotFoundError(f"File not found: {final_file_path}")
+
+        with open(final_file_path, 'r') as f:
             data = json.load(f)  
 
         stocks: list[Stock] = []
