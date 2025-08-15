@@ -15,6 +15,7 @@ from alpha_vantage_api import AlphaVantageProvider
 from hugging_face_api import HugginFaceProvider
 from news_api import NewsAPIProvider
 from twilio_provider import TwilioProvider
+from yfinance_provider import YahooFinanceProvider
 
 # Constants
 REPO_ID = 'meta-llama/Llama-3.1-8B-Instruct:novita'
@@ -36,6 +37,7 @@ class Builder:
         self.hugging_face_provider = HugginFaceProvider()
         self.news_api_provider = NewsAPIProvider()
         self.twilio_provider = TwilioProvider()
+        self.yahoo_finance_provider = YahooFinanceProvider()
 
     def sumarize_stocks_data(self):
         """Summarizes the daily time series data for a given stocks symbol from the input file.
@@ -52,7 +54,7 @@ class Builder:
             for stock in stocks_list:
                 counter_days = 0
                 # Fetch daily time series data for the stock symbol
-                daily_data = self.alpha_vantage_provider.get_time_series_daily_data(stock.symbol)
+                daily_data = self.yahoo_finance_provider.get_time_series_daily_data(stock.symbol)
                 
                 if not daily_data:
                     raise ValueError(f"No data found for stock symbol: {stock.symbol}")
@@ -60,16 +62,7 @@ class Builder:
                 # Create a summary of the daily data
                 daily_data_summaries += f"Summary for {stock.symbol} ({stock.company_name}):\n"
                 for date, data in daily_data.items():
-
-                    if not isinstance(data, dict):
-                        print(f"Unexpected API response for {stock.symbol}: {data}")
-                        break
-
-                    if '1. open' not in data or '4. close' not in data:
-                        print(f"Missing expected keys in data for {stock.symbol} on {date}: {data}")
-                        break
-                        
-                    daily_data_summaries += f"Date: {date}, Open: {data['1. open']}, Close: {data['4. close']}\n"
+                    daily_data_summaries += f"Date: {date}, Open: {data['Open']}, Close: {data['Close']}\n"
                     dates.append(date)  
                     counter_days += 1
 
@@ -78,7 +71,7 @@ class Builder:
                         break
 
                 # Get articles related to the stock symbol from the News API according to the dates
-                news_articles = self.news_api_provider.get_news_articles(query=stock.symbol, company_name=stock.company_name, from_date=dates[0], to_date=dates[1])
+                news_articles = self.news_api_provider.get_news_articles(query=stock.symbol, company_name=stock.symbol, from_date=dates[0], to_date=dates[1])
                 daily_data_summaries += "/n"+ news_articles
                 # Get completion from the Hugging Face API
                 stock_completion = self.hugging_face_provider.get_completion(repo_id=REPO_ID, prompt=daily_data_summaries)
@@ -105,48 +98,6 @@ class Builder:
             return self.twilio_provider.sends_message_sms(to, body)
         except Exception as e:
             raise Exception(f"An error occurred while sending SMS notification: {e}")
-        
-    def create_dates(self):
-        """
-        Creates a date string for the current date and the day before.
-        This is used to ensure that the date is not a weekend (Saturday or Sunday).
-
-        Returns:
-            tuple: A tuple containing the date string for the current date and the day before.
-        
-        """
-        # Create a date string for the current date and the day before
-        # This is used to ensure that the date is not a weekend (Saturday or Sunday)
-        datetime_now_str, date_time_day_before_str = "", ""
-
-        number_days = 1
-        datetime_now = datetime.datetime.now()
-        can_continue = True
-        while(can_continue):
-            if datetime_now.weekday() not in [SATURDAY, SUNDAY]:
-                datetime_now_str = datetime.date.strftime(datetime_now, "%Y-%m-%d")
-
-                date_time_day_before = datetime_now - datetime.timedelta(days=number_days)
-                if date_time_day_before.weekday() != SATURDAY or date_time_day_before.weekday() != SUNDAY:
-                    date_time_day_before_str = datetime.date.strftime(date_time_day_before, "%Y-%m-%d")
-                    can_continue = False
-                elif date_time_day_before.weekday() == SATURDAY:
-                    print("Day before is SATURDAY, we have to get another day.")
-                    number_days += 1
-                    date_time_day_before = datetime_now - datetime.timedelta(days=number_days)
-                    date_time_day_before_str = datetime.date.strftime(date_time_day_before, "%Y-%m-%d")
-                    can_continue = False
-                elif date_time_day_before.weekday() == SUNDAY:
-                    print("Day before is SUNDAY, we have to get another day.")
-                    number_days += 2
-                    date_time_day_before = datetime_now - datetime.timedelta(days=number_days)
-                    date_time_day_before_str = datetime.date.strftime(date_time_day_before, "%Y-%m-%d")
-                    can_continue = False
-            else:
-                print("Today is weekend, we have to get another day.")
-                datetime_now = datetime_now - datetime.timedelta(days=number_days)
-
-        return datetime_now_str, date_time_day_before_str
 
     def load_stocks_from_json(self, file_path) -> list[Stock]:
         """
