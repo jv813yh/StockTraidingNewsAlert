@@ -5,7 +5,6 @@
 # Date: 08/01/2025
 
 import json
-import datetime
 from stock import Stock
 from dotenv import load_dotenv, find_dotenv
 import os
@@ -20,8 +19,6 @@ from yfinance_provider import YahooFinanceProvider
 # Constants
 REPO_ID = 'meta-llama/Llama-3.1-8B-Instruct:novita'
 INPUT_FILE = 'stocks.json'
-SATURDAY = 5
-SUNDAY = 6
 
 load_path = find_dotenv()
 if load_path:
