@@ -100,7 +100,7 @@ class Builder:
         """
         
         """
-        dir_name = os.path.dirname(file_path)
+        dir_name = os.path.dirname(__file__)
         final_file_path = os.path.join(dir_name, file_path)
 
         if not os.path.exists(final_file_path):
